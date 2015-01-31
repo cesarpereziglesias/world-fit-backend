@@ -25,7 +25,7 @@ class Users:
         user = User.get_by_hash(user_hash)
         if user is None:
             with transaction.manager:
-                user = User(**request)
+                user = User(mail=request['mail'])
                 DBSession.add(user)
 
         # FIXME: It's more cool if we use user instance. Here, we're out
