@@ -7,7 +7,7 @@ from pyramid.httpexceptions import HTTPNotFound, HTTPInternalServerError, HTTPBa
 
 from worldfitbackend.models import DBSession, User, Activity
 
-class Errors:
+class Users:
 
     def __init__(self, request):
         self.request = request
@@ -50,44 +50,16 @@ class Errors:
         activities = self.request.json_body
         with transaction.manager:
             for activity_data in activities:
-                activity = Activity()
+                activity_date = datetime.strptime(activity_data["date"], "%Y/%m/%d")
+                activity = DBSession.query(Activity).filter_by(user=user, date=activity_date).first()
+                if activity is None:
+                    activity = Activity()
+                    activity.activity_type = activity_type
+                    activity.date = activity_date
+                    activity.user = user
+
                 activity.value = activity_data["value"]
-                activity.activity_type = activity_type
-                activity.date = datetime.strptime(activity_data["date"], "%Y/%m/%d")
-                activity.user = user
+
                 DBSession.add(activity)
-                DBSession.flush()
 
         return "OK"
-
-    """
-    @view_config(route_name='error_show', renderer='errors/show.mako')
-    def show(self):
-        id = self.request.matchdict.get('id', None)
-        error = Error.get_by_id(id)
-        if error is None:
-            return HTTPNotFound()
-        return {'error': error}
-
-    @view_config(route_name='error_new', renderer='json')
-    def new(self):
-        request = self.request.json_body
-
-        with transaction.manager:
-            error = Error(**request)
-            DBSession.add(error)
-
-        return "OK"
-
-    @view_config(route_name='error_delete')
-    def delete(self):
-        id = self.request.matchdict.get('id', None)
-        error = Error.get_by_id(id)
-        if error is None:
-            return HTTPNotFound()
-
-        with transaction.manager:
-            DBSession.delete(error)
-
-        raise HTTPFound(self.request.route_url('error_list'))
-    """
