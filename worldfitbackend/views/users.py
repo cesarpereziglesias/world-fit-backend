@@ -21,7 +21,7 @@ class Users:
     @view_config(route_name='user_new', renderer='json')
     def new(self):
         request = self.request.json_body
-        user_hash = User.create_hash(request['email'])
+        user_hash = User.create_hash(request['mail'])
         user = User.get_by_hash(user_hash)
         if user is None:
             with transaction.manager:

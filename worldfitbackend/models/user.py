@@ -10,21 +10,21 @@ class User(Base):
     id = Column(Integer, primary_key=True, nullable=False)
 
     hash = Column(Text, nullable=False)
-    email = Column(Text, nullable=False)
+    mail = Column(Text, nullable=False)
 
     activities = relationship("Activity", backref="user")
 
-    def __init__(self, email):
-        self.email = email
-        self.hash = User.create_hash(email)
+    def __init__(self, mail):
+        self.mail = mail
+        self.hash = User.create_hash(mail)
 
     def to_dict(self):
-        return {"email": self.email,
+        return {"mail": self.mail,
                 "hash": self.hash}
 
     @staticmethod
-    def create_hash(email):
-        return SHA256.new(email).hexdigest()
+    def create_hash(mail):
+        return SHA256.new(mail).hexdigest()
 
     @staticmethod
     def get_by_hash(user_hash):
