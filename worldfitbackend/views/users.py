@@ -47,7 +47,7 @@ class Users:
         if user is None:
             return HTTPNotFound()
 
-        return sorted([activity.to_dict() for activity in user.activities], key=lambda activity: activity['date'])[-7:0]
+        return sorted([activity.to_dict() for activity in user.activities], key=lambda activity: activity['date'])[-7:]
 
 
     @view_config(route_name='user_activities_register', renderer='json')
