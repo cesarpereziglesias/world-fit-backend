@@ -24,6 +24,7 @@ def main(global_config, **settings):
 
     config.add_route('challenge_list', '/challenges', request_method="GET")
     config.add_route('challenge_new', '/challenges', request_method="POST")
+    config.add_route('challenge_show', '/challenges/{id}', request_method="GET")
     
     config.scan()
 

@@ -31,3 +31,10 @@ class Challenges:
             DBSession.add(challenge)
 
         return "OK"
+
+    @view_config(route_name='challenge_show', renderer='json')
+    def show(self):
+        challenge = Challenge.get_by_id(self.request.matchdict.get('id', None))
+        if challenge is None:
+            return HTTPNotFound()
+        return challenge.to_dict()
