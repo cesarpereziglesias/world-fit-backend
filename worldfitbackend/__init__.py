@@ -21,6 +21,10 @@ def main(global_config, **settings):
     config.add_route('user_activities', '/users/{hash}/activities', request_method="GET")
     config.add_route('user_activities_register', '/users/{hash}/activities', request_method="POST")
 
+
+    config.add_route('challenge_list', '/challenges', request_method="GET")
+    config.add_route('challenge_new', '/challenges', request_method="POST")
+    
     config.scan()
 
     return config.make_wsgi_app()
