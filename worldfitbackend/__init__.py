@@ -11,7 +11,12 @@ def main(global_config, **settings):
 
     config = Configurator(settings=settings)
     config.add_static_view('static', 'static', cache_max_age=3600)
+
     config.add_route('home', '/')
+
+    config.add_route('user_list', '/users', request_method="GET")
+    config.add_route('user_new', '/users', request_method="POST")
+    config.add_route('user_show', '/users/{hash}', request_method="GET")
 
     config.scan()
 
