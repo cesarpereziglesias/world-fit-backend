@@ -56,15 +56,14 @@ class Users:
         if user is None:
             return HTTPNotFound()
 
-        activity_type = self.request.matchdict.get('type', None)
-        if activity_type not in Activity.TYPES:
-            return HTTPBadRequest()
-
         activities = self.request.json_body
         with transaction.manager:
             for activity_data in activities:
                 activity_date = datetime.strptime(activity_data["date"], "%Y/%m/%d")
-                activity = DBSession.query(Activity).filter_by(user=user, date=activity_date).first()
+                activity_type = activity_data['activity_type']
+                activity = DBSession.query(Activity).filter_by(user=user,
+                                                               date=activity_date,
+                                                               activity_type=activity_type).first()
                 if activity is None:
                     activity = Activity()
                     activity.activity_type = activity_type
