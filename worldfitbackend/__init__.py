@@ -18,6 +18,8 @@ def main(global_config, **settings):
     config.add_route('user_new', '/users', request_method="POST")
     config.add_route('user_show', '/users/{hash}', request_method="GET")
 
+    config.add_route('user_activities_register', '/users/{hash}/activities/{type}', request_method="POST")
+
     config.scan()
 
     return config.make_wsgi_app()

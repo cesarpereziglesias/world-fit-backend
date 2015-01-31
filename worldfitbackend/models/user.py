@@ -1,6 +1,6 @@
-import json
 from Crypto.Hash import SHA256
 from sqlalchemy import Column, Text, Integer
+from sqlalchemy.orm import relationship, backref
 
 from worldfitbackend.models import Base, DBSession
 
@@ -12,14 +12,15 @@ class User(Base):
     hash = Column(Text, nullable=False)
     email = Column(Text, nullable=False)
 
+    children = relationship("Activity", backref="user")
+
     def __init__(self, email):
         self.email = email
         self.hash = User.create_hash(email)
 
-
-    def to_json(self):
-        return json.dumps({"email": self.email,
-                           "hash": self.hash})
+    def to_dict(self):
+        return {"email": self.email,
+                "hash": self.hash}
 
     @staticmethod
     def create_hash(email):

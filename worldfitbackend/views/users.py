@@ -1,9 +1,11 @@
 import transaction
 
+from datetime import datetime
+
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPNotFound, HTTPInternalServerError, HTTPBadRequest, HTTPFound
 
-from worldfitbackend.models import DBSession, User
+from worldfitbackend.models import DBSession, User, Activity
 
 class Errors:
 
@@ -12,7 +14,7 @@ class Errors:
 
     @view_config(route_name='user_list', renderer='json')
     def list(self):
-        return DBSession.query(User).all()
+        return [user.to_dict() for user in DBSession.query(User).all()]
 
     @view_config(route_name='user_new', renderer='json')
     def new(self):
@@ -30,11 +32,34 @@ class Errors:
 
     @view_config(route_name='user_show', renderer='json')
     def show(self):
-        user_hash = self.request.matchdict.get('hash', None)
-        user = User.get_by_hash(user_hash)
+        user = User.get_by_hash(self.request.matchdict.get('hash', None))
         if user is None:
             return HTTPNotFound()
-        return user.to_json()
+        return user.to_dict()
+
+    @view_config(route_name='user_activities_register', renderer='json')
+    def activities_register(self):
+        user = User.get_by_hash(self.request.matchdict.get('hash', None))
+        if user is None:
+            return HTTPNotFound()
+
+        activity_type = self.request.matchdict.get('type', None)
+        if activity_type not in Activity.TYPES:
+            return HTTPBadRequest()
+
+        activities = self.request.json_body
+        with transaction.manager:
+            for activity_data in activities:
+                activity = Activity()
+                activity.value = activity_data["value"]
+                activity.activity_type = activity_type
+                activity.date = datetime.strptime(activity_data["date"], "%Y/%m/%d")
+                activity.user = user
+                DBSession.add(activity)
+                DBSession.flush()
+
+        return "OK"
+
     """
     @view_config(route_name='error_show', renderer='errors/show.mako')
     def show(self):
