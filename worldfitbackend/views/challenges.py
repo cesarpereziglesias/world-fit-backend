@@ -5,7 +5,7 @@ from datetime import datetime
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPNotFound, HTTPInternalServerError, HTTPBadRequest, HTTPFound
 
-from worldfitbackend.models import DBSession, Challenge
+from worldfitbackend.models import DBSession, Challenge, User
 
 class Challenges:
 
@@ -55,3 +55,21 @@ class Challenges:
             results.append(result)
 
         return results
+
+    @view_config(route_name='challenge_subscribe', renderer='json')
+    def subscribe(self):
+        with transaction.manager:
+            challenge = Challenge.get_by_id(self.request.matchdict.get('id', None))
+            if challenge is None:
+                return HTTPNotFound()
+
+            request = self.request.json_body
+            print(request)
+            user = User.get_by_hash(request)
+            if user is None:
+                return HTTPBadRequest()
+
+            challenge.participants.append(user)
+            DBSession.add(challenge)
+
+        return "OK"
