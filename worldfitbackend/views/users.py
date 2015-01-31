@@ -12,9 +12,11 @@ class Users:
     def __init__(self, request):
         self.request = request
 
+
     @view_config(route_name='user_list', renderer='json')
     def list(self):
         return [user.to_dict() for user in DBSession.query(User).all()]
+
 
     @view_config(route_name='user_new', renderer='json')
     def new(self):
@@ -30,12 +32,23 @@ class Users:
         # of the session. Study the way
         return user_hash
 
+
     @view_config(route_name='user_show', renderer='json')
     def show(self):
         user = User.get_by_hash(self.request.matchdict.get('hash', None))
         if user is None:
             return HTTPNotFound()
         return user.to_dict()
+
+
+    @view_config(route_name='user_activities', renderer='json')
+    def user_activities(self):
+        user = User.get_by_hash(self.request.matchdict.get('hash', None))
+        if user is None:
+            return HTTPNotFound()
+
+        return [activity.to_dict() for activity in user.activities]
+
 
     @view_config(route_name='user_activities_register', renderer='json')
     def activities_register(self):

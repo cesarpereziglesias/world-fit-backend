@@ -12,7 +12,7 @@ class User(Base):
     hash = Column(Text, nullable=False)
     email = Column(Text, nullable=False)
 
-    children = relationship("Activity", backref="user")
+    activities = relationship("Activity", backref="user")
 
     def __init__(self, email):
         self.email = email
