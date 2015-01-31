@@ -37,4 +37,21 @@ class Challenges:
         challenge = Challenge.get_by_id(self.request.matchdict.get('id', None))
         if challenge is None:
             return HTTPNotFound()
-        return challenge.to_dict()
+
+        response = challenge.to_dict()
+        response['result'] = self._get_challenge_result(challenge)
+        return response
+
+    def _get_challenge_result(self, challenge):
+        results = []
+        for participant in challenge.participants:
+            result = {}
+            result["mail"] = participant.mail
+            value = 0
+            for activity in participant.activities:
+                if activity.date <= challenge.end and activity.date >= challenge.init:
+                    value = value + activity.value
+            result["value"] = value
+            results.append(result)
+
+        return results

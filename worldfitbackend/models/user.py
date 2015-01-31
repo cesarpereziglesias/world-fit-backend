@@ -2,7 +2,7 @@ from Crypto.Hash import SHA256
 from sqlalchemy import Column, Text, Integer
 from sqlalchemy.orm import relationship, backref
 
-from worldfitbackend.models import Base, DBSession
+from worldfitbackend.models import Base, DBSession, Suscription
 
 class User(Base):
     __tablename__ = 'users'
@@ -13,6 +13,10 @@ class User(Base):
     mail = Column(Text, nullable=False)
 
     activities = relationship("Activity", backref="user")
+
+    challenges = relationship("Challenge",
+                    secondary=Suscription,
+                    backref="participants")
 
     def __init__(self, mail):
         self.mail = mail

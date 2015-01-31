@@ -20,8 +20,9 @@ class Base(object):
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base(cls=Base)
 
+from suscription import Suscription
 from user import User
 from challenge import Challenge
 from activity import Activity
 
-__all__ = ["User", "Challenge", "Activity", ]
+__all__ = ["Suscription", "User", "Challenge", "Activity", ]
