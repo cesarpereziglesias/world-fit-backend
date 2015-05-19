@@ -1,6 +1,6 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
-import transaction
 
 from sqlalchemy import engine_from_config
 
@@ -29,7 +29,3 @@ def main(argv=sys.argv):
     settings = get_appsettings(config_uri, options=options)
     engine = engine_from_config(settings, 'sqlalchemy.')
     initialize_sql(engine)
-
-    with transaction.manager:
-        # Do nothing
-        pass

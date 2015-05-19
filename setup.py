@@ -10,19 +10,17 @@ with open(os.path.join(here, 'CHANGES.txt')) as f:
 
 requires = [
     'pyramid',
-    'pyramid_chameleon',
     'pyramid_debugtoolbar',
     'pyramid_tm',
     'SQLAlchemy',
     'transaction',
     'zope.sqlalchemy',
     'waitress',
-    'pycrypto',
     ]
 
-setup(name='world-fit-backend',
+setup(name='worldfit',
       version='0.0',
-      description='world-fit-backend',
+      description='worldfit',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
         "Programming Language :: Python",
@@ -37,12 +35,12 @@ setup(name='world-fit-backend',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      test_suite='worldfitbackend',
+      test_suite='worldfit',
       install_requires=requires,
       entry_points="""\
       [paste.app_factory]
-      main = worldfitbackend:main
+      main = worldfit:main
       [console_scripts]
-      initialize_world-fit-backend_db = worldfitbackend.scripts.initializedb:main
+      initialize_worldfit = worldfit.scripts.initializedb:main
       """,
       )

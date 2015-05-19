@@ -1,4 +1,4 @@
-world-fit-backend README
+worldfit README
 ==================
 
 Getting Started
@@ -8,7 +8,7 @@ Getting Started
 
 - $VENV/bin/python setup.py develop
 
-- $VENV/bin/initialize_world-fit-backend_db development.ini
+- $VENV/bin/initialize_worldfit_db development.ini
 
 - $VENV/bin/pserve development.ini
 
